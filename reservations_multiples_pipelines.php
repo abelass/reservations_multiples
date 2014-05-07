@@ -42,7 +42,7 @@ function reservations_multiples_recuperer_fond($flux){
 	echo $fond;
 	if ($fond=='formulaires/inc-reservation_connection'){
 		$auteurs_multiples=recuperer_fond('inclure/auteurs_multiples',$flux['data']['contexte'],array('ajax'=>'oui'));
-		$flux['data']['texte'] = str_replace('<!--extra_connection2-->', '<!--extra_connection2-->1' . $auteurs_multiples , $flux['data']['texte']);
+		$flux['data']['texte'] .=  $auteurs_multiples;
 	}
 	return $flux;
 }
