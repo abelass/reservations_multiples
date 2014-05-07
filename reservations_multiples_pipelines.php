@@ -12,13 +12,38 @@
 if (!defined('_ECRIRE_INC_VERSION')) return;
 	
 
-/*
- * Un fichier de pipelines permet de regrouper
- * les fonctions de branchement de votre plugin
- * sur des pipelines existants.
- */
+function reservations_multiples_formulaire_charger($flux){
+	$form = $flux['args']['form'];
+	if ($form=='reservation'){
+	$flux['data']['auteurs']='';
+		
+	}
+	return $flux;
+}
 
+function reservations_multiples_formulaire_verifier($flux){
+	$form = $flux['args']['form'];
+	if ($form=='reservation'){
 
+	}
+	return $flux;
+}
 
+function reservations_multiples_formulaire_traiter($flux){
+	$form = $flux['args']['form'];
+	if ($form=='reservation'){
 
+	}
+	return $flux;
+}
+
+function reservations_multiples_recuperer_fond($flux){
+	$fond = $flux['args']['fond'];
+	echo $fond;
+	if ($fond=='formulaires/inc-reservation_connection'){
+		$auteurs_multiples=recuperer_fond('inclure/auteurs_multiples',$flux['data']['contexte'],array('ajax'=>'oui'));
+		$flux['data']['texte'] = str_replace('<!--extra_connection2-->', '<!--extra_connection2-->1' . $auteurs_multiples , $flux['data']['texte']);
+	}
+	return $flux;
+}
 ?>
