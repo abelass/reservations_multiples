@@ -10,9 +10,9 @@
 		#ACTION_FORMULAIRE{#ENV{action}}
 
 		<ul>
-			[(#SAISIE{input, exemple,
-				label=<:reservations_multiples:cfg_exemple:>,
-				explication=<:reservations_multiples:cfg_exemple_explication:>})]
+			[(#SAISIE{input, nombre_limite,
+				label=<:reservations_multiples:nombre_limite:>,
+				explication=<:reservations_multiples:nombre_limite_explication:>})]
 		</ul>
 
 		<input type="hidden" name="_meta_casier" value="reservations_multiples" />

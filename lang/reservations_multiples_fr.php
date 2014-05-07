@@ -9,9 +9,11 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'reservations_multiples_titre' => 'Réservations multiples',
 
 	// C
-	'cfg_exemple' => 'Exemple',
-	'cfg_exemple_explication' => 'Explication de cet exemple',
 	'cfg_titre_parametrages' => 'Paramétrages',
+	
+	//N
+	'nombre_limite' => 'Nombre limites',
+	'nombre_limite_explication' => 'Si vide aucune limitation',	
 
 	// T
 	'titre_page_configurer_reservations_multiples' => 'Réservations multiples',
