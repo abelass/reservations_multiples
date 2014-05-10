@@ -1,4 +1,30 @@
-<ul class="auturs_multiples">
-        [(#SAISIE{checkbox,ajouter_ami,
-        label=<:reservations_multiples:ajouter_ami:>,datas=#ARRAY{1,<:reservations_multiples:oui:>}})]
+<ul class="auturs_multiples"  id="auturs_multiples"> 
+    <li><label><:reservations_multiples:label_reserver_amie:></label></li>
+     <B_extras>
+     <li>
+        <BOUCLE_extras(DATA){source tableau, #ENV{ajouter}}>    
+            <INCLURE{fond=inclure/inc-reservation_connection_extras,
+                numero=#COMPTEUR_BOUCLE,
+                champs_extras_auteurs=#ENV{champs_extras_auteurs_add}|table_valeur{#CLE},env}/>
+            </li>
+            <li>
+               <div class="choix">
+                <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{enlever-16.png}" value="[(#COMPTEUR_BOUCLE|moins{1})]"/>
+                <label><:reservations_multiples:label_enlever:></label>
+                </div>  
+        </BOUCLE_extras>
+        <div class="choix">
+        <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"/>
+        <label><:reservations_multiples:label_ajouter:></label>
+        </div>
+    </li>    
+    </B_extras>
+        <li>
+            <div class="choix">
+            <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"/>
+            <label><:reservations_multiples:label_ajouter:></label>
+            </div>
+        </li>
+    <//B_extras>   
 </ul>
+
