@@ -9,7 +9,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
 	//L
 	'label_ajouter'=>'Ajouter',	
-	'label_ajouter'=>'Enlever',		
+	'label_enlever'=>'Enlever',		
 	'label_reserver_amie'=>'J\'aimerai réserver pour une autre persone :',
 	
 	//N
