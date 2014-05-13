@@ -52,7 +52,7 @@ function reservations_multiples_formulaire_charger($flux){
 function reservations_multiples_formulaire_verifier($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
-		if(_request('nombre_auteurs'))$flux['data']['ajouter'] = 'ajouter auteurs';
+		if(_request('nombre_auteurs') OR _request('nombre_auteurs')==0)$flux['data']['ajouter'] = 'ajouter auteurs';
 	}
 	return $flux;
 }
