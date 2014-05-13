@@ -1,4 +1,4 @@
-<ul class="auturs_multiples"  id="auturs_multiples"> 
+<ul class="auteurs_multiples"  id="auteurs_multiples"> 
     <li><label><:reservations_multiples:label_reserver_amie:></label></li>
      <B_extras>
      <li>
@@ -9,22 +9,36 @@
             </li>
             <li>
                <div class="choix">
-                <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{enlever-16.png}" value="[(#COMPTEUR_BOUCLE|moins{1})]" [(#HTML5)formnovalidate]/>
+                <input  type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{enlever-16.png}" value="[(#COMPTEUR_BOUCLE|moins{1})]" [(#HTML5)formnovalidate]/>
                 <label><:reservations_multiples:label_enlever:></label>
                 </div>  
         </BOUCLE_extras>
         <div class="choix">
-        <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"/>
+        <input  type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"/>
         <label><:reservations_multiples:label_ajouter:></label>
         </div>
     </li>    
     </B_extras>
         <li>
             <div class="choix">
-            <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"/>
+            <input   type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"/>
             <label><:reservations_multiples:label_ajouter:></label>
             </div>
         </li>
     <//B_extras>   
 </ul>
 
+<script type="text/javascript">
+//<![CDATA[
+		/*$('input[name="nombre_auteurs"]').click(function(event) {
+			event.preventDefault();
+			$(this).trigger(this);
+				$('html, body').animate({
+		        scrollTop: $("#auteurs_multiples").offset().top
+		    }, 2000);	
+
+
+
+		});*/
+//]]>
+</script>
