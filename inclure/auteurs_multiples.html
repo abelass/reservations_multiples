@@ -9,7 +9,7 @@
             </li>
             <li>
                <div class="choix">
-                <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{enlever-16.png}" value="[(#COMPTEUR_BOUCLE|moins{1})]"/>
+                <input type="image" name="nombre_auteurs" src="#CHEMIN_IMAGE{enlever-16.png}" value="[(#COMPTEUR_BOUCLE|moins{1})]" [(#HTML5)formnovalidate]/>
                 <label><:reservations_multiples:label_enlever:></label>
                 </div>  
         </BOUCLE_extras>
