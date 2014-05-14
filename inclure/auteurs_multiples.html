@@ -20,7 +20,7 @@
         </BOUCLE_extras>
         [(#GET{limit}|>{#TOTAL_BOUCLE}|oui|ou{#GET{limit}|non})<li>
 	        <div class="choix">
-	        	<input  type="image" name="nr_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"[ (#HTML5)formnovalidate]/>
+	        	<input  type="image" name="nr_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#COMPTEUR_BOUCLE|plus{1})]"[ (#HTML5)formnovalidate]/>
 	        	<label><:reservations_multiples:label_ajouter:></label>
 	        </div>
         </li>]
@@ -29,7 +29,7 @@
     </B_extras>
         <li>
             <div class="choix">
-            <input   type="image" name="nr_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="[(#NOMBRE_AUTEURS|plus{1})]"[ (#HTML5)formnovalidate]/>
+            <input   type="image" name="nr_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="1"[ (#HTML5)formnovalidate]/>
             <label><:reservations_multiples:label_ajouter:></label>
             </div>
         </li>
@@ -41,9 +41,9 @@
 //<![CDATA[
 [(#ENV{nr_auteurs}|et{#ENV{nr_auteurs}|!={0}}|oui)
 
-			/*$('html, body').animate({
+			$('html, body').animate({
 		        scrollTop: $("#auteurs_multiples_#ENV{nr_auteurs}").offset().top
-		    }, 2000);*/
+		    }, 2000);
 
 		    	]
 

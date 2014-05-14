@@ -18,7 +18,9 @@ function reservations_multiples_formulaire_charger($flux){
 
 		$champs_extras_auteurs_add=array();
 			
-		$nombre_auteurs=_request('nr_auteurs')?_request('nr_auteurs'):(_request('nombre_auteurs')?_request('nombre_auteurs'):'');
+		if(_request('nr_auteurs')==0)$nombre_auteurs=0;
+		else $nombre_auteurs=_request('nr_auteurs')?_request('nr_auteurs'):(_request('nombre_auteurs')?_request('nombre_auteurs'):'');
+		
 
 		$ajouter=array();
 		$i = 1;
@@ -49,13 +51,13 @@ function reservations_multiples_formulaire_charger($flux){
 function reservations_multiples_formulaire_verifier($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
-		//if(_request('nr_auteurs') OR _request('nr_auteurs')==0)$flux['data']['ajouter'] = 'ajouter auteurs';
-		//else{
+		if(_request('nr_auteurs') OR _request('nr_auteurs')==0)$flux['data']['ajouter'] = 'ajouter auteurs';
+		else{
 			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
 			$erreurs=array();
 			$obligatoires=array();
 			$i = 1;
-			while ($i <= _request('nr_auteurs')) {
+			while ($i <= _request('nombre_auteurs')) {
 				$obligatoires[]='nom_'.$i;
 				$obligatoires[]='email_'.$i;
 				include_spip('inc/saisies');
@@ -64,7 +66,7 @@ function reservations_multiples_formulaire_verifier($flux){
 					set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
 					$erreurs=array_merge($erreurs,saisies_verifier($champs_extras_auteurs));	
 				}					
-			//}
+			}
     		//Remettre les valeurs initiales
 			foreach($champs_extras_auteurs as $key =>$value){
 				set_request($value['options']['nom'],_request($value['options']['nom']));
