@@ -21,7 +21,7 @@ function reservations_multiples_formulaire_charger($flux){
 			$champs_extras_auteurs_add=array();
 
 		$flux['data']['auteurs']='';				
-		$nombre_auteurs=_request('nombre_auteurs')?_request('nombre_auteurs'):0;
+		$nombre_auteurs=_request('nombre_auteurs')?_request('nombre_auteurs'):'';
 
 		$ajouter=array();
 		$i = 1;
