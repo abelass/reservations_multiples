@@ -15,13 +15,10 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
 function reservations_multiples_formulaire_charger($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
-		$champs_extra=false;
 
-			$champs_extra=true;
-			$champs_extras_auteurs_add=array();
-
-		$flux['data']['auteurs']='';				
-		$nombre_auteurs=_request('nombre_auteurs')?_request('nombre_auteurs'):'';
+		$champs_extras_auteurs_add=array();
+			
+		$nombre_auteurs=_request('nr_auteurs')?_request('nr_auteurs'):(_request('nombre_auteurs')?_request('nombre_auteurs'):'');
 
 		$ajouter=array();
 		$i = 1;
@@ -34,16 +31,16 @@ function reservations_multiples_formulaire_charger($flux){
 				//Adapter les champs extras
 		       foreach($flux['data']['champs_extras_auteurs'] as $key =>$value){
 		           $valeurs[$value['options']['nom'].'_'.$nr]='';
-				   $champs_extras_auteurs_add[$nr][$key]=$value;
-				   $champs_extras_auteurs_add[$nr][$key]['options']['label']=extraire_multi($value['options']['label']);  
+				   $champs_extras_auteurs_add[$nr][$key]=$value;  
 		           $champs_extras_auteurs_add[$nr][$key]['options']['nom']=$value['options']['nom'].'_'.$nr;              
 		            }
 		        }	
 			}
 		$flux['data']['nombre_auteurs']=$nombre_auteurs;
+		$flux['data']['nr_auteurs']='';
 		$flux['data']['champs_extras_auteurs_add']=$champs_extras_auteurs_add;
 		$flux['data']['ajouter']=$ajouter;
-
+		$flux['data']['_hidden']='<input type="hidden" name="nombre_auteurs" value="'.$flux['data']['nombre_auteurs'].'">';
 		}
 			
 	return $flux;
@@ -52,7 +49,32 @@ function reservations_multiples_formulaire_charger($flux){
 function reservations_multiples_formulaire_verifier($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
-		if(_request('nombre_auteurs') OR _request('nombre_auteurs')==0)$flux['data']['ajouter'] = 'ajouter auteurs';
+		//if(_request('nr_auteurs') OR _request('nr_auteurs')==0)$flux['data']['ajouter'] = 'ajouter auteurs';
+		//else{
+			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
+			$erreurs=array();
+			$obligatoires=array();
+			$i = 1;
+			while ($i <= _request('nr_auteurs')) {
+				$obligatoires[]='nom_'.$i;
+				$obligatoires[]='email_'.$i;
+				include_spip('inc/saisies');
+        		//Vérifier les champs extras
+				foreach($champs_extras_auteurs as $key =>$value){
+					set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
+					$erreurs=array_merge($erreurs,saisies_verifier($champs_extras_auteurs));	
+				}					
+			//}
+    		//Remettre les valeurs initiales
+			foreach($champs_extras_auteurs as $key =>$value){
+				set_request($value['options']['nom'],_request($value['options']['nom']));
+			}
+			
+			foreach($obligatoires AS $champ){
+                if(!_request($champ))$erreurs[$champ]=_T("info_obligatoire");
+            }
+			$flux['data']=$erreurs;				
+		}
 	}
 	return $flux;
 }
