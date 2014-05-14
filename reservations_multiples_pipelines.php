@@ -18,9 +18,9 @@ function reservations_multiples_formulaire_charger($flux){
 
 		$champs_extras_auteurs_add=array();
 			
-		if(_request('nr_auteurs')==0)$nombre_auteurs=0;
-		else $nombre_auteurs=_request('nr_auteurs')?_request('nr_auteurs'):(_request('nombre_auteurs')?_request('nombre_auteurs'):'');
 		
+		$nombre_auteurs=intval(_request('nr_auteurs'))?_request('nr_auteurs'):(_request('nombre_auteurs')?_request('nombre_auteurs'):'');
+		echo $nombre_auteurs;
 
 		$ajouter=array();
 		$i = 1;
@@ -43,6 +43,7 @@ function reservations_multiples_formulaire_charger($flux){
 		$flux['data']['champs_extras_auteurs_add']=$champs_extras_auteurs_add;
 		$flux['data']['ajouter']=$ajouter;
 		$flux['data']['_hidden']='<input type="hidden" name="nombre_auteurs" value="'.$flux['data']['nombre_auteurs'].'">';
+		//echo _request('nr_auteurs');
 		}
 			
 	return $flux;
@@ -51,32 +52,38 @@ function reservations_multiples_formulaire_charger($flux){
 function reservations_multiples_formulaire_verifier($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
-		if(_request('nr_auteurs') OR _request('nr_auteurs')==0)$flux['data']['ajouter'] = 'ajouter auteurs';
+		if(_request('nr_auteurs'))$flux['data']['ajouter'] = 'ajouter auteurs';
 		else{
+			   include_spip('cextras_pipelines');
 			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
 			$erreurs=array();
 			$obligatoires=array();
 			$i = 1;
-			while ($i <= _request('nombre_auteurs')) {
+			if($nombre=_request('nombre_auteurs')){
+				while ($i <= $nombre) {
 				$obligatoires[]='nom_'.$i;
 				$obligatoires[]='email_'.$i;
 				include_spip('inc/saisies');
         		//Vérifier les champs extras
-				foreach($champs_extras_auteurs as $key =>$value){
+				/*foreach($champs_extras_auteurs as $key =>$value){
 					set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
 					$erreurs=array_merge($erreurs,saisies_verifier($champs_extras_auteurs));	
-				}					
+				}	*/				
 			}
+				
+			}
+
     		//Remettre les valeurs initiales
-			foreach($champs_extras_auteurs as $key =>$value){
+			/*foreach($champs_extras_auteurs as $key =>$value){
 				set_request($value['options']['nom'],_request($value['options']['nom']));
-			}
+			}*/
 			
-			foreach($obligatoires AS $champ){
+			/*foreach($obligatoires AS $champ){
                 if(!_request($champ))$erreurs[$champ]=_T("info_obligatoire");
-            }
-			$flux['data']=$erreurs;				
+            }*/
+			$flux['data']=array_merge($flux['data'],$erreurs);				
 		}
+		echo serialize($flux['data']);
 	}
 	return $flux;
 }
