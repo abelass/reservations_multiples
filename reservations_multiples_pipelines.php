@@ -59,6 +59,7 @@ function reservations_multiples_formulaire_verifier($flux){
 		elseif($nombre=_request('nombre_auteurs')){				
 			include_spip('inc/saisies');
 			include_spip('cextras_pipelines');
+			$erreurs=array();
 			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
 			
 									
@@ -82,7 +83,7 @@ function reservations_multiples_formulaire_verifier($flux){
 
 		         if ($email=_request('email_'.$nr)){
 		            include_spip('inc/filtres');
-		            // un redacteur qui modifie son email n'a pas le droit de le vider si il y en avait un
+		            // la validité du mail
 		            if (!email_valide($email)){
 		                $erreurs['email_'.$nr] = _T('form_prop_indiquer_email');
 		                }
@@ -109,7 +110,8 @@ function reservations_multiples_formulaire_verifier($flux){
 			foreach($champs_extras_auteurs as $key =>$value){
 				set_request($value['options']['nom'],$$value['options']['nom']);
 				}
-				$flux['data']=array_merge($flux['data'],$erreurs);							
+				$flux['data']=array_merge($flux['data'],$erreurs);
+				if (count($flux['data'])) $flux['data']['message_erreur'] = _T('reservation:message_erreur');					
 			}			
 		}
 	
