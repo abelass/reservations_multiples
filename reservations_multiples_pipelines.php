@@ -15,14 +15,10 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
 function reservations_multiples_formulaire_charger($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
-
-		$champs_extras_auteurs_add=array();
-			
-		
+		$champs_extras_auteurs_add=array();	
+		$ajouter=array();						
 		$nombre_auteurs=intval(_request('nr_auteurs'))?_request('nr_auteurs'):(_request('nombre_auteurs')?_request('nombre_auteurs'):'');
-		echo $nombre_auteurs;
 
-		$ajouter=array();
 		$i = 1;
 		while ($i <= $nombre_auteurs) {
 			$nr=$i++;
@@ -52,64 +48,63 @@ function reservations_multiples_formulaire_charger($flux){
 function reservations_multiples_formulaire_verifier($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
-		if(_request('nr_auteurs')){
-			
+		
+		//Une erreur bidon pour éviter ne pas traiter le formulaire lors de modification de nombre de inscrits
+		if(_request('nr_auteurs')){				
 			$flux['data']=array(
 				'ajouter' => 'ajouter auteurs',
 				'message_erreur'=>''
-			);
+				);
 			}
-		else{
-			   include_spip('cextras_pipelines');
+		elseif($nombre=_request('nombre_auteurs')){				
+			include_spip('inc/saisies');
+			include_spip('cextras_pipelines');
 			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
-			$erreurs=array();
-			$obligatoires=array();
-
-			if($nombre=_request('nombre_auteurs')){
-				 //Sauveharde les valeurs intitiales des champs extras
-				foreach($champs_extras_auteurs as $key =>$value){
-					$$value['options']['nom']=_request($value['options']['nom']);
-				}
-					
-				include_spip('inc/saisies');
-				$i = 1;
-				while ($i <= $nombre) {
-					$nr=$i++;
-					//les champs de bases obligatoires	
-					$obligatoires[]='nom_'.$nr;
-					$obligatoires[]='email_'.$nr;
-					
-	        		//Vérifier les champs extras
-					foreach($champs_extras_auteurs as $key =>$value){
-						// Adapter les request pour pouvoir faire la vérification des champs extras
-						
-						set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
-						$e=saisies_verifier($champs_extras_auteurs);
-						
-						//Adapter le nom du champ
-						if(is_array($e)){
-							foreach($e AS $champ=>$erreur){
-								$erreurs[$champ.'_'.$nr]=$erreur;
-								}
-							}
-						}					
-					}
-				
-				//tester les champs de bases obligatoires
-				foreach($obligatoires AS $champ){
-                	if(!_request($champ))$erreurs[$champ]=_T("info_obligatoire");
-            		}
-				
+			$obligatoires=array();	
+									
+			 //Stocker les valeurs intitiales des champs extras
+			foreach($champs_extras_auteurs as $key =>$value){
+				$$value['options']['nom']=_request($value['options']['nom']);
 			}
+			
+			//Vérification des champs aditionnels
+			$i = 1;
+			while ($i <= $nombre) {
+				$nr=$i++;
+				
+				//les champs de bases obligatoires	
+				$obligatoires[]='nom_'.$nr;
+				$obligatoires[]='email_'.$nr;
+				
+        		//Vérifier les champs extras
+				foreach($champs_extras_auteurs as $key =>$value){
+					
+					// Adapter les request pour pouvoir faire la vérification des champs extras						
+					set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
+					$e=saisies_verifier($champs_extras_auteurs);
+					
+					//Adapter le nom du champ
+					if(is_array($e)){
+						foreach($e AS $champ=>$erreur){
+							$erreurs[$champ.'_'.$nr]=$erreur;
+							}
+						}
+					}					
+				}
+			
+			//Tester les champs de bases obligatoires
+			foreach($obligatoires AS $champ){
+            	if(!_request($champ))$erreurs[$champ]=_T("info_obligatoire");
+        		}	
 
     		//Remettre les valeurs initiales
 			foreach($champs_extras_auteurs as $key =>$value){
 				set_request($value['options']['nom'],$$value['options']['nom']);
 				}
-			$flux['data']=array_merge($flux['data'],$erreurs);				
+				$flux['data']=array_merge($flux['data'],$erreurs);							
+			}			
 		}
-		echo serialize($flux['data']);
-	}
+	
 	return $flux;
 }
 
@@ -126,7 +121,6 @@ function reservations_multiples_recuperer_fond($flux){
 	if ($fond=='formulaires/inc-reservation_connection'){
 		$auteurs_multiples=recuperer_fond('inclure/auteurs_multiples',$flux['data']['contexte'],array('ajax'=>'oui'));
 		$flux['data']['texte'] .=  $auteurs_multiples;
-	}
+		}
 	return $flux;
 }
-?>

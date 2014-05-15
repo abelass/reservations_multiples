@@ -1,5 +1,4 @@
 #SET{limit,#CONFIG{reservations_multiples/nombre_limite}}
-
 <ul class="auteurs_multiples_0"  id="auteurs_multiples"> 
     <li><label><:reservations_multiples:label_reserver_amie:></label>
      <B_extras>
@@ -40,12 +39,8 @@
 
 //<![CDATA[
 [(#ENV{nr_auteurs}|et{#ENV{nr_auteurs}|!={0}}|oui)
-
-			$('html, body').animate({
-		        scrollTop: $("#auteurs_multiples_#ENV{nr_auteurs}").offset().top
-		    }, 2000);
-
-		    	]
-
+	$('html, body').animate({
+        scrollTop: $("#auteurs_multiples_#ENV{nr_auteurs}").offset().top
+    }, 2000);]
 //]]>
 </script>
