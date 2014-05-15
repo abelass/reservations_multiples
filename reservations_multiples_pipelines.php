@@ -60,7 +60,7 @@ function reservations_multiples_formulaire_verifier($flux){
 			include_spip('inc/saisies');
 			include_spip('cextras_pipelines');
 			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
-			$obligatoires=array();	
+			
 									
 			 //Stocker les valeurs intitiales des champs extras
 			foreach($champs_extras_auteurs as $key =>$value){
@@ -73,8 +73,20 @@ function reservations_multiples_formulaire_verifier($flux){
 				$nr=$i++;
 				
 				//les champs de bases obligatoires	
-				$obligatoires[]='nom_'.$nr;
-				$obligatoires[]='email_'.$nr;
+				$obligatoires=array('nom_'.$nr,'email_'.$nr);	
+				
+				//Tester les champs de bases obligatoires
+				foreach($obligatoires AS $champ){
+	            	if(!_request($champ))$erreurs[$champ]=_T("info_obligatoire");
+	        		}	
+
+		         if ($email=_request('email_'.$nr)){
+		            include_spip('inc/filtres');
+		            // un redacteur qui modifie son email n'a pas le droit de le vider si il y en avait un
+		            if (!email_valide($email)){
+		                $erreurs['email_'.$nr] = _T('form_prop_indiquer_email');
+		                }
+		            }
 				
         		//Vérifier les champs extras
 				foreach($champs_extras_auteurs as $key =>$value){
@@ -92,10 +104,6 @@ function reservations_multiples_formulaire_verifier($flux){
 					}					
 				}
 			
-			//Tester les champs de bases obligatoires
-			foreach($obligatoires AS $champ){
-            	if(!_request($champ))$erreurs[$champ]=_T("info_obligatoire");
-        		}	
 
     		//Remettre les valeurs initiales
 			foreach($champs_extras_auteurs as $key =>$value){
@@ -111,6 +119,9 @@ function reservations_multiples_formulaire_verifier($flux){
 function reservations_multiples_formulaire_traiter($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
+		if($nombre=_request('nombre_auteurs')){
+			
+		}	
 
 	}
 	return $flux;
