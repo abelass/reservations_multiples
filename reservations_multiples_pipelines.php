@@ -18,7 +18,7 @@ function reservations_multiples_formulaire_charger($flux){
 		$champs_extras_auteurs_add=array();	
 		$ajouter=array();						
 		$nombre_auteurs=intval(_request('nr_auteurs'))?_request('nr_auteurs'):(_request('nombre_auteurs')?_request('nombre_auteurs'):'');
-
+		if(_request('nr_auteurs')=='nada')$nombre_auteurs=0;
 		$i = 1;
 		while ($i <= $nombre_auteurs) {
 			$nr=$i++;
@@ -39,7 +39,7 @@ function reservations_multiples_formulaire_charger($flux){
 		$flux['data']['champs_extras_auteurs_add']=$champs_extras_auteurs_add;
 		$flux['data']['ajouter']=$ajouter;
 		$flux['data']['_hidden']='<input type="hidden" name="nombre_auteurs" value="'.$flux['data']['nombre_auteurs'].'">';
-		//echo _request('nr_auteurs');
+
 		}
 			
 	return $flux;
