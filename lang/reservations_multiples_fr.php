@@ -12,6 +12,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'label_enlever'=>'Enlever',		
 	'label_reserver_amie'=>'J\'aimerai réserver pour une autre persone :',
 	
+	//M
+	'message_ok_reservations_pour'=>'Réservé pour : @noms@',
+	
 	//N
 	'nombre_limite' => 'Nombre limites',
 	'nombre_limite_explication' => 'Si vide aucune limitation',	

@@ -125,33 +125,32 @@ function reservations_multiples_formulaire_verifier($flux){
 
 function reservations_multiples_formulaire_traiter($flux){
 	$form = $flux['args']['form'];
-	if ($form=='reservation'){
-		if($nombre=_request('nombre_auteurs')){
-			
-			//Enregistrement des champs additionnels
-			$enregistrer=charger_fonction('reservation_enregistrer','inc');
-			if(function_exists('champs_extras_objet')){
-				$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
-			}
-			else $champs_extras_auteurs=array();
-			// ne pas créer de compte spip
-			set_request('enregistrer','');	
-			$i = 1;
-			while ($i <= $nombre) {
-				//recupérer les champs par défaut
-				$nr=$i++;
-				set_request('nom',_request('nom_'.$nr));
-				set_request('email',_request('email_'.$nr));	
-        		//Vérifier les champs extras
-				foreach($champs_extras_auteurs as $key =>$value){
-										
-					// récupérer les champs extras					
-					set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
-					}					
-				$flux['data']=$enregistrer('','','',$champs_extras_auteurs);
-			}
-			
-		}	
+	if ($form=='reservation' AND $nombre=_request('nombre_auteurs')){
+		$noms=array(_request('nom'));
+		//Enregistrement des champs additionnels
+		$enregistrer=charger_fonction('reservation_enregistrer','inc');
+		if(function_exists('champs_extras_objet')){
+			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
+		}
+		else $champs_extras_auteurs=array();
+		// ne pas créer de compte spip
+		set_request('enregistrer','');	
+		$i = 1;
+		while ($i <= $nombre) {
+			//recupérer les champs par défaut
+			$nr=$i++;
+			set_request('nom',_request('nom_'.$nr));
+			set_request('email',_request('email_'.$nr));		
+			$noms[]	= _request('nom');
+    		//Vérifier les champs extras
+			foreach($champs_extras_auteurs as $key =>$value){
+									
+				// récupérer les champs extras					
+				set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
+				}					
+			$flux['data']=$enregistrer('','','',$champs_extras_auteurs);
+			$flux['data']['message_ok'].=_T('reservations_multiples:message_ok_reservations_pour',array('noms'=>implode(', ',$noms)));
+		}
 
 	}
 	return $flux;
