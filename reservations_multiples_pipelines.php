@@ -28,7 +28,7 @@ function reservations_multiples_formulaire_charger($flux){
 			if($flux['data']['champs_extras_auteurs']){
 				//Adapter les champs extras
 		       foreach($flux['data']['champs_extras_auteurs'] as $key =>$value){
-		           $valeurs[$value['options']['nom'].'_'.$nr]='';
+		           $flux['data'][$value['options']['nom'].'_'.$nr]='';
 				   $champs_extras_auteurs_add[$nr][$key]=$value;  
 		           $champs_extras_auteurs_add[$nr][$key]['options']['nom']=$value['options']['nom'].'_'.$nr;              
 		            }
@@ -60,15 +60,18 @@ function reservations_multiples_formulaire_verifier($flux){
 			include_spip('inc/saisies');
 			include_spip('cextras_pipelines');
 			$erreurs=array();
-			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
-			
-									
-			 //Stocker les valeurs intitiales des champs extras
-			foreach($champs_extras_auteurs as $key =>$value){
-				$$value['options']['nom']=_request($value['options']['nom']);
+
+			if(function_exists('champs_extras_objet')){
+				$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
+										
+				 //Stocker les valeurs intitiales des champs extras
+				foreach($champs_extras_auteurs as $key =>$value){
+					$$value['options']['nom']=_request($value['options']['nom']);
+				}
 			}
+			else $champs_extras_auteurs=array();
 			
-			//Vérification des champs aditionnels
+			//Vérification des champs additionnels
 			$i = 1;
 			while ($i <= $nombre) {
 				$nr=$i++;
@@ -104,17 +107,19 @@ function reservations_multiples_formulaire_verifier($flux){
 						}
 					}					
 				}
-			
-
+			//enlever le message d'erreur en attendand de comnprendre d'ou vient ce message qui se met d'office
+			unset($flux['data']['message_erreur']);
     		//Remettre les valeurs initiales
 			foreach($champs_extras_auteurs as $key =>$value){
 				set_request($value['options']['nom'],$$value['options']['nom']);
 				}
 				$flux['data']=array_merge($flux['data'],$erreurs);
-				if (count($flux['data'])) $flux['data']['message_erreur'] = _T('reservation:message_erreur');					
+				
+			//remettre 	le message d'erreur
+			if (count($flux['data'])>0) $flux['data']['message_erreur'] = _T('reservation:message_erreur');					
 			}			
 		}
-	
+
 	return $flux;
 }
 
@@ -122,6 +127,29 @@ function reservations_multiples_formulaire_traiter($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
 		if($nombre=_request('nombre_auteurs')){
+			
+			//Enregistrement des champs additionnels
+			$enregistrer=charger_fonction('reservation_enregistrer','inc');
+			if(function_exists('champs_extras_objet')){
+				$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
+			}
+			else $champs_extras_auteurs=array();
+			// ne pas créer de compte spip
+			set_request('enregistrer','');	
+			$i = 1;
+			while ($i <= $nombre) {
+				//recupérer les champs par défaut
+				$nr=$i++;
+				set_request('nom',_request('nom_'.$nr));
+				set_request('email',_request('email_'.$nr));	
+        		//Vérifier les champs extras
+				foreach($champs_extras_auteurs as $key =>$value){
+										
+					// récupérer les champs extras					
+					set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
+					}					
+				$flux['data']=$enregistrer('','','',$champs_extras_auteurs);
+			}
 			
 		}	
 
