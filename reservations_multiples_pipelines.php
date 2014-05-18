@@ -129,6 +129,16 @@ function reservations_multiples_formulaire_traiter($flux){
 		$noms=array(_request('nom'));
 		//Enregistrement des champs additionnels
 		$enregistrer=charger_fonction('reservation_enregistrer','inc');
+		
+		//Lister les messages de retour
+		preg_match('/<h3>(.*?)<\/h3>/s',$flux['data']['message_ok'], $match);		
+		$titre=$match[0];
+					
+		preg_match('/<p(.*?)<\/p>/s',$flux['data']['message_ok'], $match);		
+		$intro=$match[0];		
+		preg_match('/<table(.*?)<\/table>/s',$flux['data']['message_ok'], $match);  
+			
+		$message_ok=array($match[0]);
 		if(function_exists('champs_extras_objet')){
 			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
 		}
@@ -148,11 +158,23 @@ function reservations_multiples_formulaire_traiter($flux){
 				// récupérer les champs extras					
 				set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
 				}
-			set_request('nr_auteur',$nr);					
+			set_request('nr_auteur',$nr);
+			
+			//Enregistrer				
 			$flux['data']=$enregistrer('','','',$champs_extras_auteurs);
-			$flux['data']['message_ok'].=_T('reservations_multiples:message_ok_reservations_pour',array('noms'=>implode(', ',$noms)));
+			preg_match('/<table(.*?)<\/table>/s',$flux['data']['message_ok'], $match);  
+			$message_ok[]=$match['0'];
+			$nr=0;
 		}
-
+			//Recopiler les messages de retour
+			$m=$intro;
+			$m.=$titre;			
+			foreach($message_ok AS $message){
+				$m.="<h4>$noms[$nr]</h4>";				
+				$m.=$message;				
+				$nr++;
+			}		
+			$flux['data']['message_ok']=$m;
 	}
 	return $flux;
 }
