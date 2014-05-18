@@ -15,7 +15,7 @@
 
 	<licence>GNU/GPL</licence>
 	
-	<necessite nom="reservation_evenement" compatibilite="[1.10.0;]" />	
+	<necessite nom="reservation_evenement" compatibilite="[1.11.0;]" />	
 	
 	<pipeline nom="recuperer_fond" inclure="reservations_multiples_pipelines.php" />
 	<pipeline nom="formulaire_charger" inclure="reservations_multiples_pipelines.php" />
