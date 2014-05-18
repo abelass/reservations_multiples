@@ -48,12 +48,13 @@ function reservations_multiples_formulaire_charger($flux){
 function reservations_multiples_formulaire_verifier($flux){
 	$form = $flux['args']['form'];
 	if ($form=='reservation'){
+		//enlever le message d'erreur en attendand de comnprendre d'ou vient ce message qui se met d'office
+		unset($flux['data']['message_erreur']);		
 		
 		//Une erreur bidon pour éviter ne pas traiter le formulaire lors de modification de nombre de inscrits
 		if(_request('nr_auteurs')){				
 			$flux['data']=array(
 				'ajouter' => 'ajouter auteurs',
-				'message_erreur'=>''
 				);
 			}
 		elseif($nombre=_request('nombre_auteurs')){				
@@ -107,8 +108,7 @@ function reservations_multiples_formulaire_verifier($flux){
 						}
 					}					
 				}
-			//enlever le message d'erreur en attendand de comnprendre d'ou vient ce message qui se met d'office
-			unset($flux['data']['message_erreur']);
+
     		//Remettre les valeurs initiales
 			foreach($champs_extras_auteurs as $key =>$value){
 				set_request($value['options']['nom'],$$value['options']['nom']);
@@ -147,7 +147,8 @@ function reservations_multiples_formulaire_traiter($flux){
 									
 				// récupérer les champs extras					
 				set_request($value['options']['nom'],_request($value['options']['nom'].'_'.$nr));
-				}					
+				}
+			set_request('nr_auteur',$nr);					
 			$flux['data']=$enregistrer('','','',$champs_extras_auteurs);
 			$flux['data']['message_ok'].=_T('reservations_multiples:message_ok_reservations_pour',array('noms'=>implode(', ',$noms)));
 		}
