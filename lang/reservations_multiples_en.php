@@ -8,9 +8,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'cfg_titre_parametrages' => 'Paramétrages',
 	
 	//L
-	'label_ajouter'=>'Ajouter',	
-	'label_enlever'=>'Enlever',		
-	'label_reserver_amie'=>'J\'aimerai également inscrire une autre persone :',
+	'label_ajouter'=>'Add',	
+	'label_enlever'=>'Rempve',		
+	'label_reserver_amie'=>'I would like to register one more person:',
 	
 	//M
 	'message_ok_reservations_pour'=>'Réservé pour : @noms@',
