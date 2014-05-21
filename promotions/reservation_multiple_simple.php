@@ -3,7 +3,7 @@
 
 if (!defined("_ECRIRE_INC_VERSION")) return;       
            
-function promotions_reservation_multiple_simple_dist($flux){
+function promotions_reservation_multiple_simple_dist($flux=array()){
 	$return= array(
 				array(
 					'saisie' => 'input',
