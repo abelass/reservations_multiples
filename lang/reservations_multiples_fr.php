@@ -21,6 +21,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'message_ok_reservations_pour'=>'Réservé pour : @noms@',
 	
 	//N
+	'nom_reservation_multiple_simple'=>'Réservation multiple simple',
 	'nombre_limite' => 'Nombre limites',
 	'nombre_limite_explication' => 'Si vide aucune limitation',	
 	
