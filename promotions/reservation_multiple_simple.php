@@ -37,21 +37,21 @@ function promotions_reservation_multiple_simple_dist($flux=array(),$option=''){
     return $return;
 }
 
-function promotions_reservation_multiple_simple_action_dist($flux){
+function promotions_reservation_multiple_simple_action_dist($flux,$promotion){
 		
 	$prix_original=$flux['data']['prix_ht'];
-	$reduction=10;
-	$type_reduction="pourcentage";
+	$reduction=$promotion['valeurs_promotion']['reduction'];
+	$type_reduction=$promotion['valeurs_promotion']['type_reduction'];
 	
 	$nr_auteur=_request('nr_auteur');
 	$nombre_auteurs=_request('nombre_auteurs');
 	
 	if($nombre_auteurs and !$nr_auteur){
 			if($type_reduction=='pourcentage')$flux['data']['prix_ht']=$prix_original-($prix_original/100*$reduction);
-			elseif($type_reduction=='absolut')$flux['data']['prix_ht']=$prix_original-$reduction;
+			elseif($type_reduction=='absolu')$flux['data']['prix_ht']=$prix_original-$reduction;
 	}
 
-	//if($id_objet=$flux['data']['id_prix_objet']) sql_insertq('spip_promotions_liens');
+	//if($id_objet=$flux['data']['id_reservation_detail']) sql_insertq('spip_promotions_liens');
 
     return $flux;
 }
