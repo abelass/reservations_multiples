@@ -1,8 +1,9 @@
 <?php
 
 
-if (!defined("_ECRIRE_INC_VERSION")) return;       
-           
+if (!defined("_ECRIRE_INC_VERSION")) return; 
+      
+// Définition des champs pour le détail du formulaire promotion du plugin promotions (https://github.com/abelass/promotions)          
 function promotions_reservation_multiple_simple_dist($flux=array(),$option=''){
 	
 	$return=array(
@@ -36,12 +37,12 @@ function promotions_reservation_multiple_simple_dist($flux=array(),$option=''){
 
     return $return;
 }
-
+// Définition de l'action de la promotion  
 function promotions_reservation_multiple_simple_action_dist($flux,$promotion){
 		
 	$prix_original=$flux['data']['prix_original'];
-	$reduction=10;
-	$type_reduction="pourcentage";
+	$reduction=$promotion['reduction'];
+	$type_reduction=$promotion['type_reduction'];
 	
 	$nr_auteur=_request('nr_auteur');
 	$nombre_auteurs=_request('nombre_auteurs');
