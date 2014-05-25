@@ -37,10 +37,12 @@ function promotions_reservation_multiple_simple_dist($flux=array(),$option=''){
 
     return $return;
 }
+
 // Définition de l'action de la promotion  
 function promotions_reservation_multiple_simple_action_dist($flux,$promotion){
 		
 	$prix_original=$flux['data']['prix_original'];
+
 	$reduction=$promotion['valeurs_promotion']['reduction'];
 	$type_reduction=$promotion['valeurs_promotion']['type_reduction'];
 	
@@ -56,6 +58,7 @@ function promotions_reservation_multiple_simple_action_dist($flux,$promotion){
 	}
 		$flux['data']['objet']='reservations_detail';
 		$flux['data']['table']='spip_reservations_details';			
+
     return $flux;
 }
 
