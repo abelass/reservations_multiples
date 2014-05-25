@@ -41,15 +41,15 @@ function promotions_reservation_multiple_simple_dist($flux=array(),$option=''){
 function promotions_reservation_multiple_simple_action_dist($flux,$promotion){
 		
 	$prix_original=$flux['data']['prix_original'];
-	$reduction=$promotion['reduction'];
-	$type_reduction=$promotion['type_reduction'];
+	$reduction=$promotion['valeurs_promotion']['reduction'];
+	$type_reduction=$promotion['valeurs_promotion']['type_reduction'];
 	
 	$nr_auteur=_request('nr_auteur');
 	$nombre_auteurs=_request('nombre_auteurs');
 	
 	if($nombre_auteurs and !$nr_auteur){
 			if($type_reduction=='pourcentage')$flux['data']['prix_ht']=$prix_original-($prix_original/100*$reduction);
-			elseif($type_reduction=='absolut')$flux['data']['prix_ht']=$prix_original-$reduction;
+			elseif($type_reduction=='absolu')$flux['data']['prix_ht']=$prix_original-$reduction;
 	}
 		$flux['data']['objet']='reservations_detail';
 		$flux['data']['table']='spip_reservations_details';			
