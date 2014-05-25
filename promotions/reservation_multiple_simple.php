@@ -47,7 +47,10 @@ function promotions_reservation_multiple_simple_action_dist($flux,$promotion){
 	$nr_auteur=_request('nr_auteur');
 	$nombre_auteurs=_request('nombre_auteurs');
 	
+	//Si on est en présence de la première réservation d'une réservation multiple 
 	if($nombre_auteurs and !$nr_auteur){
+		
+			//On applique les réductions prévues
 			if($type_reduction=='pourcentage')$flux['data']['prix_ht']=$prix_original-($prix_original/100*$reduction);
 			elseif($type_reduction=='absolu')$flux['data']['prix_ht']=$prix_original-$reduction;
 	}
