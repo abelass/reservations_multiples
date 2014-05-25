@@ -139,6 +139,33 @@ function reservations_multiples_formulaire_traiter($flux){
 		preg_match('/<table(.*?)<\/table>/s',$flux['data']['message_ok'], $match);  
 			
 		$message_ok=array($match[0]);
+		
+		echo serialize(_request('promotions'));
+		if ($promotions=_request('promotions')){
+			
+			$promotion=$promotions[0];
+			
+			$sql=sql_select(
+				'prix_original,titre',
+				'spip_promotions_liens,spip_promotions',
+				'id_objet='.$promotion['id_objet'].' AND objet='.sql_quote($promotion['objet']));
+			$i=0;
+			$titre=array();
+			while($data=sql_fetch($sql)){
+				$i++;			
+				if($i==1)$prix_original=$data['prix_original'];
+				$titre[]=extraire_multi($data['titre']);
+			};
+	
+			
+			//Afficher la promotion
+			$replace=recuperer_fond('inclure/promotion_reservation',array('prix_original'=>$prix_original,'titre'=>implode(', ',$titre)));
+			echo $replace;
+			echo $message_ok[0];
+			$message_ok=str_replace('<tr class="total_ttc">', $replace.'<tr class="total_ttc">', $message_ok[0]);
+			$message_ok[0]=$message_ok;
+		}		
+		
 		if(function_exists('champs_extras_objet')){
 			$champs_extras_auteurs=champs_extras_objet(table_objet_sql('auteur'));
 		}
@@ -148,6 +175,7 @@ function reservations_multiples_formulaire_traiter($flux){
 		$i = 1;
 		while ($i <= $nombre) {
 			//recupérer les champs par défaut
+
 			$nr=$i++;
 			set_request('nom',_request('nom_'.$nr));
 			set_request('email',_request('email_'.$nr));		
