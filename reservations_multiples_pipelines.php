@@ -38,7 +38,7 @@ function reservations_multiples_formulaire_charger($flux){
 		$flux['data']['nr_auteurs']='';
 		$flux['data']['champs_extras_auteurs_add']=$champs_extras_auteurs_add;
 		$flux['data']['ajouter']=$ajouter;
-		$flux['data']['_hidden']='<input type="hidden" name="nombre_auteurs" value="'.$flux['data']['nombre_auteurs'].'">';
+		$flux['data']['_hidden'].='<input type="hidden" name="nombre_auteurs" value="'.$flux['data']['nombre_auteurs'].'">';
 
 		}
 			
