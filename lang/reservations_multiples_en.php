@@ -9,7 +9,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
 	//L
 	'label_ajouter'=>'Add',	
-	'label_enlever'=>'Rempve',		
+	'label_enlever'=>'Remove',		
 	'label_reserver_amie'=>'I would like to register one more person:',
 	
 	//M

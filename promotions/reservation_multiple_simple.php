@@ -6,35 +6,11 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
 // Définition des champs pour le détail du formulaire promotion du plugin promotions (https://github.com/abelass/promotions)          
 function promotions_reservation_multiple_simple_dist($flux=array(),$option=''){
 	
-	$return=array(
-		'nom'=>_T('reservations_multiples:nom_reservation_multiple_simple'),
-		'saisies'=>	 array(
-						array(
-							'saisie' => 'input',
-							'options' => array(
-								'nom' => 'reduction',
-								'label' => _T('reservations_multiples:label_reduction'),
-								'obligatoire'=>'oui'
-							)
-						),
-						array(
-							'saisie' => 'selection',
-							'options' => array(
-								'nom' => 'type_reduction',
-								'label' => _T('reservations_multiples:label_type_reduction'),
-								'datas'=>array(
-									'pourcentage'=>_T('reservations_multiples:pourcentage'),
-									'absolu'=>_T('reservations_multiples:absolu')							
-									), 
-							'obligatoire'=>'oui'							
-							)
-						),
-					)	
-			);
-	
-	if($option AND isset($return[$option]))	$return=$return[$option];
-						
+	$return=array('nom'=>_T('reservations_multiples:nom_reservation_multiple_simple'));
 
+	if($option AND isset($return[$option]))	$return=$return[$option];
+	else $return='';
+						
     return $return;
 }
 
