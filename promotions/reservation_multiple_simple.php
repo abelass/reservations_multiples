@@ -9,12 +9,12 @@ function promotions_reservation_multiple_simple_dist($flux){
 }
 
 // Définition de l'action de la promotion  
-function promotions_reservation_multiple_simple_action_dist($flux,$promotion){
+function promotions_reservation_multiple_simple_action_dist($flux,$promotion=array()){
 		
 	$prix_original=$flux['data']['prix_original'];
 
-	$reduction=$promotion['valeurs_promotion']['reduction'];
-	$type_reduction=$promotion['valeurs_promotion']['type_reduction'];
+	$reduction=$flux['data']['reduction'];
+	$type_reduction=$flux['data']['type_reduction'];
 	
 	$nr_auteur=_request('nr_auteur');
 	$nombre_auteurs=_request('nombre_auteurs');
