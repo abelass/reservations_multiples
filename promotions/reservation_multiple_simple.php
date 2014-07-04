@@ -11,7 +11,9 @@ function promotions_reservation_multiple_simple_dist($flux=''){
 // Définition de l'action de la promotion  
 function promotions_reservation_multiple_simple_action_dist($flux,$promotion=array()){
 		
-	$prix_original=$flux['data']['prix_original'];
+	$prix_original=isset($flux['data']['prix_original'])?$flux['data']['prix_original']:'';
+	
+	$prix_base=isset($flux['data']['prix_base'])?$flux['data']['prix_base']:$prix_original;
 
 	$reduction=$flux['data']['reduction'];
 	$type_reduction=$flux['data']['type_reduction'];
@@ -23,7 +25,7 @@ function promotions_reservation_multiple_simple_action_dist($flux,$promotion=arr
 	if($nombre_auteurs and !$nr_auteur){
 		
 			//On applique les réductions prévues
-			if($type_reduction=='pourcentage')$flux['data']['prix_ht']=$prix_original-($prix_original/100*$reduction);
+			if($type_reduction=='pourcentage')$flux['data']['prix_ht']=$prix_original-($prix_base/100*$reduction);
 			elseif($type_reduction=='absolu')$flux['data']['prix_ht']=$prix_original-$reduction;
 	}
 		$flux['data']['objet']='reservations_detail';
