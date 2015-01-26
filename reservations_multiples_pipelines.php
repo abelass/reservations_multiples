@@ -148,12 +148,19 @@ function reservations_multiples_formulaire_traiter($flux){
 		// ne pas créer de compte spip
 		set_request('enregistrer','');	
 		$i = 1;
+		
+		//inscription aux mailinglistes
+		if(test_plugin_actif('reservations_mailsubscribers')){
+			$inscription=charger_fonction('inscription_mailinglinglistes','inc');		
+		}
+		
 		while ($i <= $nombre) {
 			//recupérer les champs par défaut
-
+			
 			$nr=$i++;
+			$email=_request('email_'.$nr);
 			set_request('nom',_request('nom_'.$nr));
-			set_request('email',_request('email_'.$nr));		
+			set_request('email',$email);		
 			$noms[]	= _request('nom');
     		//Vérifier les champs extras
 			foreach($champs_extras_auteurs as $key =>$value){
@@ -168,8 +175,15 @@ function reservations_multiples_formulaire_traiter($flux){
 			preg_match('/<table(.*?)<\/table>/s',$flux['data']['message_ok'], $match);  
 			$message_ok[]=$match['0'];
 			$nr=0;
+			
+			//inscription aux mailinglistes
+			if(test_plugin_actif('reservations_mailsubscribers')){
+				$inscription($email);	
+				}
+
+			
 		}
-			//Recopiler les messages de retour
+			//Recopiler le messages de retour
 			$m=$intro;
 			$m.=$titre;			
 			foreach($message_ok AS $message){
