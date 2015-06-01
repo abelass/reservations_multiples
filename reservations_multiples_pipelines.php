@@ -24,10 +24,7 @@ function reservations_multiples_formulaire_charger($flux) {
 
   //Le formulaire reservation
   if ($form == 'reservation') {
-    include_spip('inc/config');
-    $config = lire_config('reservations_multiples', array());
 
-    if ($config[''])
     $champs_extras_auteurs_add = array();
     $ajouter = array();
     $nombre_auteurs = intval(_request('nr_auteurs')) ? _request('nr_auteurs') : (_request('nombre_auteurs') ? _request('nombre_auteurs') : '');
