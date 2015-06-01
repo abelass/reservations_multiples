@@ -17,7 +17,7 @@ if (!defined('_ECRIRE_INC_VERSION'))
  *
  * @return array       Données de la configuration
  **/
-function reservations_multiples_config_charger() {
+function reservations_multiples_config() {
   include_spip('inc/config');
   $config = lire_config('reservations_multiples',array());
 
