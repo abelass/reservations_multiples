@@ -13,17 +13,15 @@ if (!defined('_ECRIRE_INC_VERSION'))
   return;
 
 /**
- * Charge les valeurs d'un formulaire
+ * Retourne la configuration
  *
- * @pipeline formulaire_charger
- * @param  array $flux Données du pipeline
- * @return array       Données du pipeline
+ * @return array       Données de la configuration
  **/
 function reservations_multiples_config_charger() {
   include_spip('inc/config');
   $config = lire_config('reservations_multiples',array());
 
-  // Si pas de config on met les défauts
+  // Si pas de config on met le défauts
   if (count($config) == 0) {
     $config = array('multiple_personnes' => 'on');
   }
