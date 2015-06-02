@@ -11,6 +11,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
   // E
   'explication_multiple_inscriptions' => 'Pour chaque événement il es possible d\'indiquer le nombre de réservations',
   'explication_multiple_personnes' => 'Pour chaque personne aditionnelle il est alors possible/nécessaire de renseigner ses détails personnels',
+  'explication_quantite' => 'Si vide, la quantité sera 1',
 
 	//L
 	'label_ajouter'=>'Ajouter',

@@ -266,3 +266,18 @@ function reservations_multiples_recuperer_fond($flux) {
 
   return $flux;
 }
+
+/**
+ * Insère des donnés dans le head public
+ *
+ * @pipeline insert_head
+ * @param  array $flux Données du pipeline
+ * @return array       Données du pipeline
+ **/
+function reservations_multiples_insert_head($flux) {
+  $script = find_in_path('scripts/reservations_multiples.js');
+  $css = find_in_path('css/reservations_multiples.css');
+  $flux .= "<link rel='stylesheet' type='text/css' media='all' href='$css' />\n" . "<script type='text/javascript' src='$script'> </script>";
+
+  return $flux;
+}
