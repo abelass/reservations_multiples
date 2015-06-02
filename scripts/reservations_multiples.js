@@ -1,4 +1,4 @@
-// Cacher le champ quantité quandl'évñenemnt n'es pas sélectionné
+// Cacher le champ quantité quand l'événement n'est pas sélectionné
 $(document).ready(function() {
 
   var container = '.choix.quantite';
