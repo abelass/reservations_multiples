@@ -1,20 +1,20 @@
 #SET{limit,#CONFIG{reservations_multiples/nombre_limite}}
-<ul class="auteurs_multiples_0"  id="auteurs_multiples"> 
-    <li><label><:reservations_multiples:label_reserver_amie:></label>
+<ul class="auteurs_multiples_0"  id="auteurs_multiples">
+    <li class="editer label"><label><:reservations_multiples:label_reserver_amie:></label>
      <B_extras>
-     <li>     	
-        <BOUCLE_extras(DATA){source tableau, #ENV{ajouter}}>  
+     <li class="editer multiples_personnes">
+        <BOUCLE_extras(DATA){source tableau, #ENV{ajouter}}>
         <ul id="auteurs_multiples_#COMPTEUR_BOUCLE">
             <INCLURE{fond=inclure/inc-reservation_connection_extras,
                 numero=#COMPTEUR_BOUCLE,
                 champs_extras_auteurs=#ENV{champs_extras_auteurs_add}|table_valeur{#CLE},env}/>
-            
-            <li>
+
+            <li class="editer enlever">
                <div class="choix">
                 <input  type="image" name="nr_auteurs" src="#CHEMIN_IMAGE{enlever-16.png}" value="[(#COMPTEUR_BOUCLE|=={1}|?{nada,#COMPTEUR_BOUCLE|moins{1}})]"[ (#HTML5)formnovalidate]/>
                 <label><:reservations_multiples:label_enlever:></label>
-                </div>  
-         	</li>  
+                </div>
+         	</li>
          </ul>
         </BOUCLE_extras>
         [(#GET{limit}|>{#TOTAL_BOUCLE}|oui|ou{#GET{limit}|non})<li>
@@ -24,15 +24,15 @@
 	        </div>
         </li>]
         </ul>
-    </li>    
+    </li>
     </B_extras>
-        <li>
+        <li class="editer ajouter">
             <div class="choix">
             <input   type="image" name="nr_auteurs" src="#CHEMIN_IMAGE{ajouter-16.png}" value="1"[ (#HTML5)formnovalidate]/>
             <label><:reservations_multiples:label_ajouter:></label>
             </div>
         </li>
-    <//B_extras>   
+    <//B_extras>
 </ul>
 
 <script type="text/javascript">
