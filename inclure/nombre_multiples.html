@@ -3,5 +3,5 @@
   <label for="quantite[#ID_EVENEMENT]">
     <:reservations_detail:label_quantite:>
   </label>
-  <input  type="input" "name="quantite[#ID_EVENEMENT]" />
+  <input id="champ_quantite" type="text" class="number" name="quantite[#ID_EVENEMENT]" value="[(#ENV{quantite}|table_valeur{#ID_EVENEMENT})]"/>
 </div>
