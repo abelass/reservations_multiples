@@ -48,6 +48,9 @@ function reservations_multiples_formulaire_charger($flux) {
           }
         }
       }
+      $flux['data']['id_reservation_source'] = '';
+      $flux['data']['type_lien'] = '';
+      $flux['data']['origine_lien'] = '';
       $flux['data']['nombre_auteurs'] = $nombre_auteurs;
       $flux['data']['nr_auteurs'] = '';
       $flux['data']['champs_extras_auteurs_add'] = $champs_extras_auteurs_add;
@@ -195,9 +198,13 @@ function reservations_multiples_formulaire_traiter($flux) {
         $inscription = charger_fonction('inscription_mailinglinglistes', 'inc');
       }
 
+       //Ajouter les références à la réservation d'origine
+        set_request('type_lien', 'multiple_personnes');
+        set_request('origine_lien', 'reservations_multiples');
+
+      //Enregistrer les réservations
       while ($i <= $nombre) {
         //recupérer les champs par défaut
-
         $nr = $i++;
         $email = _request('email_' . $nr);
         set_request('nom', _request('nom_' . $nr));
@@ -207,9 +214,11 @@ function reservations_multiples_formulaire_traiter($flux) {
         //Vérifier les champs extras
         foreach ($champs_extras_auteurs as $key => $value) {
 
-          // récupérer les champs extras
+        // récupérer les champs extras
           set_request($value['options']['nom'], _request($value['options']['nom'] . '_' . $nr));
         }
+        
+        
         set_request('nr_auteur', $nr);
 
         //Enregistrer
@@ -278,6 +287,32 @@ function reservations_multiples_insert_head($flux) {
   $script = find_in_path('scripts/reservations_multiples.js');
   $css = find_in_path('css/reservations_multiples.css');
   $flux .= "<link rel='stylesheet' type='text/css' media='all' href='$css' />\n" . "<script type='text/javascript' src='$script'> </script>";
+
+  return $flux;
+}
+
+/**
+ * Intervient après l'enregistrement
+ *
+ * @pipeline post_insertion
+ * @param  array $flux Données du pipeline
+ * @return array       Données du pipeline
+ **/
+function reservations_multiples_post_insertion($flux) {
+  
+  if ($flux['args']['table'] == 'spip_reservations' AND _request('nombre_auteurs')) {
+    spip_log('nr : '._request('nr_auteur'),'teste');
+    $id_reservation = $flux['args']['id_objet'];
+    // premier enregisté, on met l'id_reservation_source
+    if(!_request('nr_auteur') > 0){
+      set_request('id_reservation_base', $id_reservation);
+    }
+    //Puis on recorrige l'id_reservation dans la session
+    else {
+      $id_reservation_source = _request('id_reservation_base');
+      set_request('id_reservation_source', $id_reservation_source );
+    }
+  }
 
   return $flux;
 }
