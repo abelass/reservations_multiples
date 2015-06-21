@@ -34,6 +34,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// T
 	'titre_page_configurer_reservations_multiples' => 'Réservations multiples',
+	'type_lien_multiple_personnes' => 'Réservation multiple, reśervation d\'origine : @reference@',	
 );
 
 ?>
