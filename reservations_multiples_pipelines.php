@@ -302,7 +302,6 @@ function reservations_multiples_insert_head($flux) {
 function reservations_multiples_post_insertion($flux) {
   
   if ($flux['args']['table'] == 'spip_reservations' AND _request('nombre_auteurs')) {
-    spip_log('nr : '._request('nr_auteur'),'teste');
     $id_reservation = $flux['args']['id_objet'];
     // premier enregisté, on met l'id_reservation_source
     if(!_request('nr_auteur') > 0){
