@@ -273,6 +273,7 @@ function reservations_multiples_recuperer_fond($flux) {
 	$fond = $flux['args']['fond'];
 	$contexte = $flux['data']['contexte'];
 
+	// Insert le choix de clients multiples.
 	if ($fond == 'formulaires/inc-reservation_connection') {
 		$config = reservations_multiples_config();
 
@@ -283,11 +284,12 @@ function reservations_multiples_recuperer_fond($flux) {
 			$flux['data']['texte'] .= $auteurs_multiples;
 		}
 	}
+
+	// Insert le champ de nombre d'un nombre multiple.
 	if ($fond == 'formulaires/inc-reservation_evenements_champ' or $fond == 'formulaires/inc-reservation_evenements_declinaisons_prix') {
 		$config = reservations_multiples_config();
 		if ($config['multiple_inscriptions'] == 'on') {
 			$flux['data']['texte'] .= recuperer_fond('inclure/nombre_multiples', $contexte);
-			;
 		}
 	}
 
