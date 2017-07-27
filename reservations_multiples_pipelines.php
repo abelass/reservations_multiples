@@ -186,12 +186,21 @@ function reservations_multiples_formulaire_traiter($flux) {
 			$enregistrer = charger_fonction('reservation_enregistrer', 'inc');
 
 			// Lister les messages de retour
-			preg_match('/<h3>(.*?)<\/h3>/s', $flux['data']['message_ok'], $match);
+
+			preg_match('/<div class="detail_reservation"(.*?)<\/div>/s', $flux['data']['message_ok'], $match);
+			$detail_reservation = $match[0];
+
+
+			preg_match('/<h3>(.*?)<\/h3>/s', $detail_reservation, $match);
 			$titre = $match[0];
 
-			preg_match('/<p(.*?)<\/p>/s', $flux['data']['message_ok'], $match);
+
+			preg_match('/<div class="intro"(.*?)<\/div>/s', $flux['data']['message_ok'], $match);
+			preg_match('<div.*class\s*=\s*["].*intro.*["']\s*>(.*)<\/div>', $flux['data']['message_ok'], $match);
 			$intro = $match[0];
-			preg_match('/<table(.*?)<\/table>/s', $flux['data']['message_ok'], $match);
+
+			print  $intro;
+			preg_match('/<table(.*?)<\/table>/s',  $detail_reservation, $match);
 
 			$message_ok = array(
 				$match[0]
@@ -246,14 +255,13 @@ function reservations_multiples_formulaire_traiter($flux) {
 				}
 			}
 			// Recopiler le messages de retour
-			$m = $intro;
-			$m .= $titre;
+			$m = $titre;
 			foreach ($message_ok as $message) {
 				$m .= "<h4>$noms[$nr]</h4>";
 				$m .= $message;
 				$nr++;
 			}
-			$flux['data']['message_ok'] = $m;
+			$flux['data']['message_ok'] = $intro . $m;
 		}
 	}
 	return $flux;
@@ -292,6 +300,18 @@ function reservations_multiples_recuperer_fond($flux) {
 			$flux['data']['texte'] .= recuperer_fond('inclure/nombre_multiples', $contexte);
 		}
 	}
+
+	/*if($fond == 'inclure/reservation'  and $contexte['statut'] == 'encours' and test_plugin_actif('reservation_bank')) {
+
+		$id_transaction = rb_inserer_transaction($contexte['id_reservation']);
+		$transaction_hash = sql_getfetsel('transaction_hash', 'spip_transactions', 'id_transaction=' .$id_transaction);
+		$flux['data']['texte'] .= recuperer_fond(
+				'inclure/reservation-lien_paiement',
+				array(
+					'id_transaction' => $id_transaction,
+					'transaction_hash' => $transaction_hash,
+				));
+	}*/
 
 	return $flux;
 }
@@ -335,6 +355,49 @@ function reservations_multiples_post_insertion($flux) {
 		else {
 			$id_reservation_source = _request('id_reservation_base');
 			set_request('id_reservation_source', $id_reservation_source);
+
+			// Envoyer une notofication.
+			/*if(test_plugin_actif('reservation_bank')) {
+				include_spip('inc/config');
+				$config = lire_config('reservation_evenement');
+				$statut = sql_getfetsel('statut', 'spip_reservations', 'id_reservation=' . $id_reservation);
+
+				//Envoie une notification si pas déjà fait.
+				if ($statut == 'encours' and
+						$notifications = charger_fonction('notifications', 'inc', true) and
+						(isset($config['quand']) && is_array($config['quand']) && !in_array($statut, $config['quand']))) {
+					spip_log($flux, 'teste');
+					$row = sql_fetsel('statut,date,id_auteur,email,lang,donnees_auteur', 'spip_reservations', 'id_reservation=' . intval($id_reservation));
+
+					//Déterminer la langue pour les notifications
+					$lang = isset($row['lang']) ? $row['lang'] : lire_config('langue_site');
+					lang_select($lang);
+
+					// Determiner l'expediteur
+					$options = array(
+						'statut' => $statut,
+						'lang' => $lang
+					);
+					if ($config['expediteur'] != "facteur")
+						$options['expediteur'] = $config['expediteur_' . $config['expediteur']];
+
+						// Envoyer au vendeur et au client
+						$notifications('reservation_vendeur', $id_reservation, $options);
+						if ($config['client']) {
+
+							if (intval($row['id_auteur']) AND $row['id_auteur'] > 0)
+								$options['email'] = sql_getfetsel('email', 'spip_auteurs', 'id_auteur=' . $row['id_auteur']);
+								else
+									$options['email'] = $row['email'];
+
+									$notifications('reservation_client', $id_reservation, $options);
+						}
+
+				}
+
+
+			}*/
+
 		}
 	}
 
