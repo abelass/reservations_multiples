@@ -187,33 +187,17 @@ function reservations_multiples_formulaire_traiter($flux) {
 
 			// Lister les messages de retour
 
-			preg_match('/<div class="detail_reservation"(.*?)<\/div>/s', $flux['data']['message_ok'], $match);
-			$detail_reservation = $match[0];
-
-
-			preg_match('/<h3>(.*?)<\/h3>/s', $detail_reservation, $match);
-			$titre = $match[0];
-
-
-			preg_match('/<div class="intro"(.*?)<\/div>/s', $flux['data']['message_ok'], $match);
-			preg_match('<div.*class\s*=\s*["].*intro.*["']\s*>(.*)<\/div>', $flux['data']['message_ok'], $match);
-			$intro = $match[0];
-
-			print  $intro;
-			preg_match('/<table(.*?)<\/table>/s',  $detail_reservation, $match);
-
-			$message_ok = array(
-				$match[0]
-			);
 
 			if (function_exists('champs_extras_objet')) {
 				$champs_extras_auteurs = champs_extras_objet(table_objet_sql('auteur'));
 			}
-			else
+			else {
 				$champs_extras_auteurs = array();
+			}
+
 				// ne pas créer de compte spip
 			set_request('enregistrer', '');
-			$i = 1;
+
 
 			// inscription aux mailinglistes
 			if (test_plugin_actif('reservations_mailsubscribers')) {
@@ -223,8 +207,10 @@ function reservations_multiples_formulaire_traiter($flux) {
 			// Ajouter les références à la réservation d'origine
 			set_request('type_lien', 'multiple_personnes');
 			set_request('origine_lien', 'reservations_multiples');
-
+			$i = 1;
 			// Enregistrer les réservations
+			$message_original = $flux['data']['message_ok'];
+			$message_ok = array();
 			while ($i <= $nombre) {
 				// recupérer les champs par défaut
 				$nr = $i++;
@@ -232,7 +218,7 @@ function reservations_multiples_formulaire_traiter($flux) {
 				set_request('nom', _request('nom_' . $nr));
 				set_request('email', $email);
 				set_request('id_auteur', '');
-				$noms[] = _request('nom');
+				$nom = _request('nom');
 
 				// Vérifier les champs extras
 				foreach ($champs_extras_auteurs as $key => $value) {
@@ -246,7 +232,7 @@ function reservations_multiples_formulaire_traiter($flux) {
 				// Enregistrer
 				$flux['data'] = $enregistrer('', '', '', $champs_extras_auteurs);
 				preg_match('/<table(.*?)<\/table>/s', $flux['data']['message_ok'], $match);
-				$message_ok[] = $match['0'];
+				$message_ok[] = "<strong>$nom</strong>" . $match['0'];
 				$nr = 0;
 
 				// inscription aux mailinglistes
@@ -255,13 +241,12 @@ function reservations_multiples_formulaire_traiter($flux) {
 				}
 			}
 			// Recopiler le messages de retour
-			$m = $titre;
+			$m = '<h3>' ._T('reservations_multiples:reservations_supplementaires') . '</h3>';
 			foreach ($message_ok as $message) {
-				$m .= "<h4>$noms[$nr]</h4>";
 				$m .= $message;
 				$nr++;
 			}
-			$flux['data']['message_ok'] = $intro . $m;
+			$flux['data']['message_ok'] = $message_original . $m;
 		}
 	}
 	return $flux;

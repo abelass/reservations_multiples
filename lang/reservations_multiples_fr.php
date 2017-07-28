@@ -32,6 +32,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// R
 	'reservations_multiples_titre' => 'Réservations multiples',
+	'reservations_supplementaires' => 'Réservations supplémentaires :',
 
 	// T
 	'titre_page_configurer_reservations_multiples' => 'Réservations multiples',
