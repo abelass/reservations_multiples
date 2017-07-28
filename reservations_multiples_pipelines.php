@@ -231,14 +231,61 @@ function reservations_multiples_formulaire_traiter($flux) {
 
 				// Enregistrer
 				$flux['data'] = $enregistrer('', '', '', $champs_extras_auteurs);
+				$id_reservation = $flux['data']['id_reservation'];
 				preg_match('/<table(.*?)<\/table>/s', $flux['data']['message_ok'], $match);
-				$message_ok[] = "<strong>$nom</strong>" . $match['0'];
+				$message = "<strong>$nom</strong>" . $match['0'];
 				$nr = 0;
 
 				// inscription aux mailinglistes
 				if (test_plugin_actif('reservations_mailsubscribers')) {
 					$inscription($email);
 				}
+
+				// Envoyer une notification.
+				if(test_plugin_actif('reservation_bank') && $notifications = charger_fonction('notifications', 'inc', true)) {
+					include_spip('inc/config');
+					$config_reservation_evenement = lire_config('reservation_evenement');
+					$preceder_formulaire= lire_config('reservation_bank/preceder_formulaire');
+					$id_transaction = rb_inserer_transaction($id_reservation);
+
+
+					$row = sql_fetsel('statut,date,id_auteur,email,lang,donnees_auteur', 'spip_reservations', 'id_reservation=' . intval($id_reservation));
+
+					//Déterminer la langue pour les notifications
+					$lang = isset($row['lang']) ? $row['lang'] : lire_config('langue_site');
+					lang_select($lang);
+
+					// Determiner l'expediteur
+					$options = array(
+					'statut' => $statut,
+					'lang' => $lang
+					);
+					if ($config_reservation_evenement['expediteur'] != "facteur") {
+						$options['expediteur'] = $config_reservation_evenement['expediteur_' . $config_reservation_evenement['expediteur']];
+					}
+
+
+					// Envoyer au vendeur et au client
+					if ($config_reservation_evenement['client']) {
+						if (intval($row['id_auteur']) AND $row['id_auteur'] > 0) {
+							$options['email'] = sql_getfetsel('email', 'spip_auteurs', 'id_auteur=' . $row['id_auteur']);
+						}
+						else {
+							$options['email'] = $row['email'];
+						}
+
+						$notifications('reservation_client', $id_reservation, $options);
+
+						$lien_paiement = recuperer_fond('inclure/lien_payer', array('id_transaction'=> $id_transaction));
+						if ($preceder_formulaire) {
+							$message = $lien_paiement . $message;
+						}
+						else {
+							$message .= $lien_paiement;
+						}
+					}
+				}
+				$message_ok[] = $message;
 			}
 			// Recopiler le messages de retour
 			$m = '';
@@ -297,17 +344,12 @@ function reservations_multiples_recuperer_fond($flux) {
 		}
 	}
 
-	/*if($fond == 'inclure/reservation'  and $contexte['statut'] == 'encours' and test_plugin_actif('reservation_bank')) {
-
+	if($fond == 'inclure/reservation' and $contexte['statut'] == 'encours' and test_plugin_actif('reservation_bank')) {
+		include_spip('inc/filtres_mini');
 		$id_transaction = rb_inserer_transaction($contexte['id_reservation']);
-		$transaction_hash = sql_getfetsel('transaction_hash', 'spip_transactions', 'id_transaction=' .$id_transaction);
-		$flux['data']['texte'] .= recuperer_fond(
-				'inclure/reservation-lien_paiement',
-				array(
-					'id_transaction' => $id_transaction,
-					'transaction_hash' => $transaction_hash,
-				));
-	}*/
+		$lien_paiement = liens_absolus(recuperer_fond('inclure/lien_payer', array('id_transaction'=> $id_transaction)));
+		$flux['data']['texte'] .= $lien_paiement;
+	}
 
 	return $flux;
 }
@@ -351,49 +393,6 @@ function reservations_multiples_post_insertion($flux) {
 		else {
 			$id_reservation_source = _request('id_reservation_base');
 			set_request('id_reservation_source', $id_reservation_source);
-
-			// Envoyer une notofication.
-			/*if(test_plugin_actif('reservation_bank')) {
-				include_spip('inc/config');
-				$config = lire_config('reservation_evenement');
-				$statut = sql_getfetsel('statut', 'spip_reservations', 'id_reservation=' . $id_reservation);
-
-				//Envoie une notification si pas déjà fait.
-				if ($statut == 'encours' and
-						$notifications = charger_fonction('notifications', 'inc', true) and
-						(isset($config['quand']) && is_array($config['quand']) && !in_array($statut, $config['quand']))) {
-					spip_log($flux, 'teste');
-					$row = sql_fetsel('statut,date,id_auteur,email,lang,donnees_auteur', 'spip_reservations', 'id_reservation=' . intval($id_reservation));
-
-					//Déterminer la langue pour les notifications
-					$lang = isset($row['lang']) ? $row['lang'] : lire_config('langue_site');
-					lang_select($lang);
-
-					// Determiner l'expediteur
-					$options = array(
-						'statut' => $statut,
-						'lang' => $lang
-					);
-					if ($config['expediteur'] != "facteur")
-						$options['expediteur'] = $config['expediteur_' . $config['expediteur']];
-
-						// Envoyer au vendeur et au client
-						$notifications('reservation_vendeur', $id_reservation, $options);
-						if ($config['client']) {
-
-							if (intval($row['id_auteur']) AND $row['id_auteur'] > 0)
-								$options['email'] = sql_getfetsel('email', 'spip_auteurs', 'id_auteur=' . $row['id_auteur']);
-								else
-									$options['email'] = $row['email'];
-
-									$notifications('reservation_client', $id_reservation, $options);
-						}
-
-				}
-
-
-			}*/
-
 		}
 	}
 

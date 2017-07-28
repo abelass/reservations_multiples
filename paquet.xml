@@ -15,7 +15,7 @@
 
 	<licence>GNU/GPL</licence>
 
-	<necessite nom="reservation_evenement" compatibilite="[1.25.1;]" />
+	<necessite nom="reservation_evenement" compatibilite="[1.26.6;]" />
 	<necessite nom="saisies" compatibilite="[2.18.12;]" />
 
 	<utilise nom="reservations_mailsubscribers" compatibilite="[1.2.4;]" />
