@@ -241,11 +241,22 @@ function reservations_multiples_formulaire_traiter($flux) {
 				}
 			}
 			// Recopiler le messages de retour
-			$m = '<h3>' ._T('reservations_multiples:reservations_supplementaires') . '</h3>';
-			foreach ($message_ok as $message) {
-				$m .= $message;
-				$nr++;
+			$m = '';
+			if (count($message_ok) > 0 and $count = count($message_ok)) {
+				if ($count == 1) {
+					$titre = _T('reservations_multiples:reservation_supplementaire');
+				}
+				else {
+					$titre = _T('reservations_multiples:reservations_supplementaires');
+				}
+				$m = '<div class="reservations_supplementaires"><h3>' . $titre . '</h3>';
+				foreach ($message_ok as $message) {
+					$m .= $message;
+					$nr++;
+				}
+				$m .= '</div>';
 			}
+
 			$flux['data']['message_ok'] = $message_original . $m;
 		}
 	}
